@@ -9,8 +9,9 @@ export default function AdminDashboard() {
   const [isData, setIsData] = useState("");
   const [isDisable, setIsDisable] = useState(false);
   const [minVal, setMinVal] = useState(false);
-  const [inputValues, setInputValues] = useState({}); 
+  const [inputValues, setInputValues] = useState({});
   const [chartData, setChartData] = useState(null);
+  const [isDataUpdated, setIsDataUpdated] = useState(false);
 
   const { state } = useLocation();
 
@@ -20,7 +21,7 @@ export default function AdminDashboard() {
     );
     setIsData(data.data.data);
     setInputValues(data.data.data?.amount);
-    setChartData(data.data.data?.amount); 
+    setChartData(data.data.data?.amount);
     const areValuesValid = Object.values(data.data.data?.amount || {}).every(
       (value) => value >= 99
     );
@@ -52,6 +53,13 @@ export default function AdminDashboard() {
         amount: inputValues,
       });
       console.log("Data saved successfully!");
+
+      setIsDataUpdated(true);
+      fetchData();
+
+      setTimeout(() => {
+        setIsDataUpdated(false);
+      }, 5000);
     } catch (error) {
       console.error("Failed to save data:", error);
     }
@@ -134,6 +142,9 @@ export default function AdminDashboard() {
       >
         Save
       </button>
+      {isDataUpdated && (
+        <p style={{ color: "green" }}>Data updated and fetched again!</p>
+      )}
     </div>
   );
 }
